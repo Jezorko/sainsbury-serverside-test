@@ -13,7 +13,7 @@ class ProductsBaseInformationExtractorSpecTest extends Specification {
     def extractor = new ProductsBaseInformationExtractor()
 
     @Unroll
-    "should return an empty list if HTML #description"() {
+    "should return an empty list if HTML is #description"() {
         when:
           def result = extractor.apply html
 
@@ -22,9 +22,9 @@ class ProductsBaseInformationExtractorSpecTest extends Specification {
 
         where:
           html     | description
-          null     | "is null"
-          ""       | "is empty"
-          "<html<" | "is invalid"
+          null     | "null"
+          ""       | "empty"
+          "<html<" | "invalid"
     }
 
     @Unroll

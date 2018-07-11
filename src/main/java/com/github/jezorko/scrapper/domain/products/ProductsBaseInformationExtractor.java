@@ -26,7 +26,7 @@ class ProductsBaseInformationExtractor implements Function<String, List<ProductB
     private final static String PRICE_PER_UNIT_CSS_CLASS = "pricePerUnit";
     private final static String URL_ATTRIBUTE_NAME = "href";
 
-    private final static String NON_NUMERIC_CHARACTERS_REGEX = "[^\\d.]+";
+    private final static String PRICE_DISALLOWED_CHARACTERS_REGEX = "[^\\d.]+";
 
     @Override
     public List<ProductBaseInformation> apply(String html) {
@@ -53,7 +53,7 @@ class ProductsBaseInformationExtractor implements Function<String, List<ProductB
     private Optional<BigDecimal> scapPriceValueFrom(Element pricePerUnitElement) {
         return Optional.ofNullable(pricePerUnitElement)
                        .map(Element::text)
-                       .map(text -> text.replaceAll(NON_NUMERIC_CHARACTERS_REGEX, ""))
+                       .map(text -> text.replaceAll(PRICE_DISALLOWED_CHARACTERS_REGEX, ""))
                        .filter(numberAsString -> !numberAsString.isEmpty())
                        .map(BigDecimal::new);
     }
