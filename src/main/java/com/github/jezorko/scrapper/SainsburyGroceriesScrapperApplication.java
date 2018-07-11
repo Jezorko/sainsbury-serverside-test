@@ -25,19 +25,22 @@ public class SainsburyGroceriesScrapperApplication {
 
     public static void main(String... args) {
         final HttpStringGetter httpStringGetter = new HttpStringGetter();
-        final List<ProductDetails> productsDetails = Stream.of(URL)
-                                                           .map(httpStringGetter)
-                                                           .map(HttpResponse::getBody)
-                                                           .flatMap(html -> extractProductsBaseInformation(html).stream())
-                                                           .map(product -> extractProductDetailsFrom(product, getProductDetailsHtml(httpStringGetter, product)))
-                                                           .collect(toList());
 
-        final PriceAndTaxInPounds totalPriceAndTax = new PriceAndTaxCalculator().calculateTotalOf(productsDetails.stream()
-                                                                                                                 .map(product -> (PricedPerUnitInPounds) product::getPricePerUnitInPounds)
-                                                                                                                 .collect(toList()));
+        final List<ProductDetails> productsDetails = extractProductsDetails(httpStringGetter, URL);
+
+        final PriceAndTaxInPounds totalPriceAndTax = calculateTotalPriceAndTax(productsDetails);
 
         final String output = toProgramOutput(productsDetails, totalPriceAndTax);
         System.out.println(output);
+    }
+
+    private static List<ProductDetails> extractProductsDetails(HttpStringGetter httpStringGetter, String url) {
+        return Stream.of(url)
+                     .map(httpStringGetter)
+                     .map(HttpResponse::getBody)
+                     .flatMap(html -> extractProductsBaseInformation(html).stream())
+                     .map(product -> extractProductDetailsFrom(product, getProductDetailsHtml(httpStringGetter, product)))
+                     .collect(toList());
     }
 
     @SneakyThrows
@@ -45,6 +48,12 @@ public class SainsburyGroceriesScrapperApplication {
         String url = new URL(new URL(URL), product.getDetailsUrl()).toString();
         return httpStringGetter.apply(url)
                                .getBody();
+    }
+
+    private static PriceAndTaxInPounds calculateTotalPriceAndTax(List<ProductDetails> productsDetails) {
+        return new PriceAndTaxCalculator().calculateTotalOf(productsDetails.stream()
+                                                                           .map(product -> (PricedPerUnitInPounds) product::getPricePerUnitInPounds)
+                                                                           .collect(toList()));
     }
 
 }
