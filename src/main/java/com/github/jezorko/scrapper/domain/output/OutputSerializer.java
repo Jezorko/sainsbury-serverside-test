@@ -1,16 +1,17 @@
 package com.github.jezorko.scrapper.domain.output;
 
 import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
+
+import java.util.function.Function;
 
 class OutputSerializer {
 
-    private final static TypeAdapter<OutputData> GSON_ADAPTER = new GsonBuilder().setPrettyPrinting()
-                                                                                 .create()
-                                                                                 .getAdapter(OutputData.class);
+    private final static Function<OutputData, String> GSON = new GsonBuilder().setPrettyPrinting()
+                                                                              .disableHtmlEscaping()
+                                                                              .create()::toJson;
 
     String serialize(OutputData outputData) {
-        return GSON_ADAPTER.toJson(outputData);
+        return GSON.apply(outputData);
     }
 
 }
