@@ -7,6 +7,9 @@ import java.util.Objects;
 
 import static java.math.RoundingMode.FLOOR;
 
+/**
+ * Allows calculation of prices sum and tax.
+ */
 public class PriceAndTaxCalculator {
 
     private final static BigDecimal TAX_PROPORTION = new BigDecimal("0.2");

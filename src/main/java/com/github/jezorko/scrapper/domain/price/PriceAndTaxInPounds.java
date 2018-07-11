@@ -10,6 +10,9 @@ import java.math.BigDecimal;
 import static java.math.BigDecimal.ZERO;
 import static lombok.AccessLevel.PRIVATE;
 
+/**
+ * Represents a price and its' tax.
+ */
 @Getter
 @Builder
 @EqualsAndHashCode
